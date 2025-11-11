@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ATM Simulator System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="atm-container">
+    <h1>🏦 ATM Simulator</h1>
+
+    <div class="section">
+      <h2>Create Account</h2>
+      <input id="holderName" placeholder="Holder Name">
+      <input id="accountNumber" placeholder="Account Number">
+      <input id="initialBalance" type="number" placeholder="Initial Balance">
+      <button onclick="createAccount()">Create</button>
+    </div>
+
+    <div class="section">
+      <h2>Deposit / Withdraw</h2>
+      <input id="accountId" type="number" placeholder="Account ID">
+      <input id="amount" type="number" placeholder="Amount">
+      <button onclick="deposit()">Deposit</button>
+      <button onclick="withdraw()">Withdraw</button>
+    </div>
+
+    <div class="section">
+      <h2>Check Balance</h2>
+      <input id="checkAccountNumber" placeholder="Account Number">
+      <button onclick="checkBalance()">Check</button>
+      <p id="balanceResult"></p>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
