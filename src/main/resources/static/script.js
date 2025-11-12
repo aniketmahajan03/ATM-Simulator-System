@@ -1,4 +1,8 @@
-const BASE_URL = "http://localhost:8080/api/accounts";
+// For testing Locally
+// const BASE_URL = "http://localhost:8080/api/accounts";
+
+// For Uploading on Render,GitHub -
+const BASE_URL = "https://atm-simulator-system.onrender.com";
 
 async function createAccount() {
   const holderName = document.getElementById("holderName").value;
