@@ -1,4 +1,4 @@
-console.log("SCRIPT JS IS LOADED");
+// console.log("SCRIPT JS IS LOADED");
 
 // For testing Locally
 // const BASE_URL = "http://localhost:8080/api/accounts";
@@ -101,11 +101,7 @@ async function showHistory() {
     }
 
 }
-// window.createAccount = createAccount;
-// window.deposit = deposit;
-// window.withdraw = withdraw;
-// window.checkBalance = checkBalance;
-// window.showHistory = showHistory;
+
 
 
 
