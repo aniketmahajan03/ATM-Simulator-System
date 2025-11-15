@@ -101,11 +101,7 @@ async function showHistory() {
     }
 
 }
-// window.createAccount = createAccount;
-// window.deposit = deposit;
-// window.withdraw = withdraw;
-// window.checkBalance = checkBalance;
-// window.showHistory = showHistory;
+
 
 
 
