@@ -1,3 +1,5 @@
+console.log("SCRIPT JS IS LOADED");
+
 // For testing Locally
 // const BASE_URL = "http://localhost:8080/api/accounts";
 
@@ -50,3 +52,62 @@ async function checkBalance() {
   const data = await res.text();
   document.getElementById("balanceResult").innerText = data;
 }
+async function showHistory() {
+    const id = document.getElementById("historyAccountId").value;
+    console.log("📌 Account ID entered:", id);
+
+    if (!id || id.trim() === "") {
+        alert("Please enter account ID");
+        return;
+    }
+
+    try {
+        const url = `${BASE_URL}/${id}/transactions`;  // ✅ Correct URL
+        console.log("🌐 Fetching URL:", url);
+
+        const response = await fetch(url);
+
+        console.log("🔍 Response status:", response.status);
+
+        const data = await response.json();
+        console.log("📦 Parsed Data:", data);
+
+        const tableBody = document.querySelector("#historyTable tbody");
+        tableBody.innerHTML = "";
+
+        if (!Array.isArray(data) || data.length === 0) {
+            tableBody.innerHTML = "<tr><td colspan='5'>No transactions found</td></tr>";
+            return;
+        }
+
+        data.forEach(txn => {
+            const row = `
+                <tr>
+                    <td>${txn.id}</td>
+                    <td>${txn.type}</td>
+                    <td>₹${txn.amount}</td>
+                    <td>${txn.timestamp}</td>
+                    <td>${txn.description}</td>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+        });
+
+    } catch (error) {
+        console.error("❌ ERROR:", error);
+        alert("Something went wrong. Check console.");
+        
+
+    }
+
+}
+// window.createAccount = createAccount;
+// window.deposit = deposit;
+// window.withdraw = withdraw;
+// window.checkBalance = checkBalance;
+// window.showHistory = showHistory;
+
+
+
+
+

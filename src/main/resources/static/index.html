@@ -31,9 +31,26 @@
       <button onclick="checkBalance()">Check</button>
       <p id="balanceResult"></p>
     </div>
+<h2>Transaction History</h2>
+<input type="number" id="historyAccountId" placeholder="Enter Account ID">
+<button onclick="showHistory()">Show History</button>
+
+<table border="1" id="historyTable">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Date</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js" type="text/javascript"></script>
+
 </body>
 </html>
