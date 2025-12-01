@@ -2,7 +2,9 @@ package com.example.atmweb.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.atmweb.dto.CreateAccountRequest;
+import com.example.atmweb.dto.CreateAccountRequest; // if you use HashMap
 import com.example.atmweb.dto.MoneyRequest;
 import com.example.atmweb.model.Account;
 import com.example.atmweb.model.Transaction;
@@ -56,30 +58,34 @@ public ResponseEntity<BigDecimal> checkBalance(
 }
 
 
-   // ✅ DEPOSIT (RETURN ONLY NUMBER)
 @PostMapping("/{accountNumber}/deposit")
-public ResponseEntity<BigDecimal> deposit(
+public ResponseEntity<Map<String, Object>> deposit(
         @PathVariable String accountNumber,
         @RequestBody MoneyRequest req) {
 
-    BigDecimal newBalance =
-            service.deposit(accountNumber, req.getAmount());
+    BigDecimal newBalance = service.deposit(accountNumber, req.getAmount());
 
-    return ResponseEntity.ok(newBalance);
+    Map<String, Object> response = new HashMap<>();
+    response.put("balance", newBalance);
+    response.put("message", "✅ Deposit successful");
+
+    return ResponseEntity.ok(response);
 }
 
-
-    // ✅ WITHDRAW (RETURN ONLY NUMBER)
 @PostMapping("/{accountNumber}/withdraw")
-public ResponseEntity<BigDecimal> withdraw(
+public ResponseEntity<Map<String, Object>> withdraw(
         @PathVariable String accountNumber,
         @RequestBody MoneyRequest req) {
 
-    BigDecimal newBalance =
-            service.withdraw(accountNumber, req.getAmount());
+    BigDecimal newBalance = service.withdraw(accountNumber, req.getAmount());
 
-    return ResponseEntity.ok(newBalance);
+    Map<String, Object> response = new HashMap<>();
+    response.put("balance", newBalance);
+    response.put("message", "✅ Withdraw successful");
+
+    return ResponseEntity.ok(response);
 }
+
 
 
     // ✅ MINI STATEMENT (PDF DOWNLOAD)

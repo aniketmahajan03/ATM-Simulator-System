@@ -1,113 +1,118 @@
-// console.log("SCRIPT JS IS LOADED");
-
 // For testing Locally
 // const BASE_URL = "http://localhost:8080/api/accounts";
 
-// For Uploading on Render,GitHub -
+// Base URL
 const BASE_URL = "https://atm-simulator-system.onrender.com/api/accounts";
 
+// ✅ CREATE ACCOUNT
 async function createAccount() {
   const holderName = document.getElementById("holderName").value;
   const accountNumber = document.getElementById("accountNumber").value;
   const initialBalance = parseFloat(document.getElementById("initialBalance").value);
 
-  const res = await fetch(BASE_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ holderName, accountNumber, initialBalance })
-  });
-  const data = await res.json();
-  alert("✅ Account created successfully! ID: " + data.id);
+  try {
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ holderName, accountNumber, initialBalance })
+    });
+
+    const data = await res.json();
+    alert(`✅ Account created successfully! ID: ${data.id}, Account Number: ${data.accountNumber}`);
+  } catch (error) {
+    console.error("❌ Error creating account:", error);
+    alert("Failed to create account. Check console.");
+  }
 }
 
+// ✅ DEPOSIT
 async function deposit() {
-  const id = document.getElementById("accountId").value;
+  const accountNumber = document.getElementById("accountId").value;
   const amount = parseFloat(document.getElementById("amount").value);
 
-  const res = await fetch(`${BASE_URL}/${id}/deposit`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amount })
-  });
-  const data = await res.json();
-  alert("💰 New Balance: ₹" + data.balance);
+  try {
+    const res = await fetch(`${BASE_URL}/${accountNumber}/deposit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount })
+    });
+
+    const data = await res.json();
+    alert(`💰 ${data.message}\nNew Balance: ₹${data.balance}`);
+  } catch (error) {
+    console.error("❌ Deposit error:", error);
+    alert("Deposit failed. Check console.");
+  }
 }
 
+// ✅ WITHDRAW
 async function withdraw() {
-  const id = document.getElementById("accountId").value;
+  const accountNumber = document.getElementById("accountId").value;
   const amount = parseFloat(document.getElementById("amount").value);
 
-  const res = await fetch(`${BASE_URL}/${id}/withdraw`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amount })
-  });
-  const data = await res.json();
-  alert("💸 New Balance: ₹" + data.balance);
+  try {
+    const res = await fetch(`${BASE_URL}/${accountNumber}/withdraw`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount })
+    });
+
+    const data = await res.json();
+    alert(`💸 ${data.message}\nNew Balance: ₹${data.balance}`);
+  } catch (error) {
+    console.error("❌ Withdraw error:", error);
+    alert("Withdraw failed. Check console.");
+  }
 }
 
+// ✅ CHECK BALANCE
 async function checkBalance() {
   const accountNumber = document.getElementById("checkAccountNumber").value;
-  const res = await fetch(`${BASE_URL}/balance/${accountNumber}`);
-  const data = await res.text();
-  document.getElementById("balanceResult").innerText = data;
+
+  try {
+    const res = await fetch(`${BASE_URL}/balance/${accountNumber}`);
+    const data = await res.text();
+    document.getElementById("balanceResult").innerText = data;
+  } catch (error) {
+    console.error("❌ Check balance error:", error);
+    document.getElementById("balanceResult").innerText = "Error fetching balance";
+  }
 }
+
+// ✅ TRANSACTION HISTORY
 async function showHistory() {
-    const id = document.getElementById("historyAccountId").value;
-    console.log("📌 Account ID entered:", id);
+  const accountNumber = document.getElementById("historyAccountId").value;
 
-    if (!id || id.trim() === "") {
-        alert("Please enter account ID");
-        return;
+  if (!accountNumber) {
+    alert("Please enter account number");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/${accountNumber}/transactions`);
+    const transactions = await res.json();
+
+    const tableBody = document.querySelector("#historyTable tbody");
+    tableBody.innerHTML = "";
+
+    if (!transactions.length) {
+      tableBody.innerHTML = "<tr><td colspan='5'>No transactions found</td></tr>";
+      return;
     }
 
-    try {
-        const url = `${BASE_URL}/${id}/transactions`;  // ✅ Correct URL
-        console.log("🌐 Fetching URL:", url);
+    transactions.forEach(txn => {
+      const row = `
+        <tr>
+          <td>${txn.id}</td>
+          <td>${txn.type}</td>
+          <td>₹${txn.amount}</td>
+          <td>${txn.timestamp}</td>
+          <td>${txn.description}</td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+  } catch (error) {
 
-        const response = await fetch(url);
-
-        console.log("🔍 Response status:", response.status);
-
-        const data = await response.json();
-        console.log("📦 Parsed Data:", data);
-
-        const tableBody = document.querySelector("#historyTable tbody");
-        tableBody.innerHTML = "";
-
-        if (!Array.isArray(data) || data.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='5'>No transactions found</td></tr>";
-            return;
-        }
-
-        data.forEach(txn => {
-            const row = `
-                <tr>
-                    <td>${txn.id}</td>
-                    <td>${txn.type}</td>
-                    <td>₹${txn.amount}</td>
-                    <td>${txn.timestamp}</td>
-                    <td>${txn.description}</td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
-        });
-
-    } catch (error) {
-        console.error("❌ ERROR:", error);
-        alert("Something went wrong. Check console.");
-        
-
-    }
-
-    function downloadMiniStatement() {
-  const id = document.getElementById("miniStmtId").value;
-  window.open(`${BASE_URL}/${id}/mini-statement`, "_blank");
 }
 }
-
-
-
-
-
-
