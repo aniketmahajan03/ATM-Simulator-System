@@ -11,6 +11,9 @@ import com.example.atmweb.model.Transaction;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    // ✅ Custom finder method for transaction history of an account
+    // ✅ Fix for your error
     List<Transaction> findByAccount(Account account);
+
+    // ✅ Optional: for recent transactions
+    List<Transaction> findTop5ByAccountOrderByTimestampDesc(Account account);
 }

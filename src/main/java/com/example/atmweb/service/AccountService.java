@@ -124,4 +124,12 @@ transactionRepository.save(new Transaction(to, "TRANSFER_IN", amount, LocalDateT
                         " is ₹" + account.getBalance())
                 .orElse("❌ Account not found for account number: " + accountNumber);
     }
+
+    public List<Transaction> getLastTransactions(Long accountId, int limit) {
+    Account account = getAccount(accountId);
+    return transactionRepository
+            .findTop5ByAccountOrderByTimestampDesc(account);
+}
+
+
 }

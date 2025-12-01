@@ -1,5 +1,6 @@
 package com.example.atmweb.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,10 @@ import com.example.atmweb.dto.TransferRequest;
 import com.example.atmweb.model.Account;
 import com.example.atmweb.model.Transaction;
 import com.example.atmweb.service.AccountService;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -82,4 +87,32 @@ public class AccountController {
         String balanceInfo = service.getBalanceByAccountNumber(accountNumber);
         return ResponseEntity.ok(balanceInfo);
     }
+   @GetMapping("/{id}/mini-statement")
+public void downloadMiniStatement(@PathVariable Long id, HttpServletResponse response) throws Exception {
+
+    List<Transaction> transactions = service.getLastTransactions(id, 5); // last 5
+
+    response.setContentType("application/pdf");
+    response.setHeader("Content-Disposition", "attachment; filename=mini-statement.pdf");
+
+    com.itextpdf.text.Document pdf = new com.itextpdf.text.Document();
+    PdfWriter.getInstance(pdf, response.getOutputStream());
+    pdf.open();
+
+    pdf.add(new Paragraph("ATM Mini Statement"));
+    pdf.add(new Paragraph("Account ID: " + id));
+    pdf.add(new Paragraph("Generated On: " + LocalDateTime.now()));
+    pdf.add(new Paragraph("--------------------------------------------------"));
+
+    for (Transaction t : transactions) {
+        pdf.add(new Paragraph(
+            t.getTimestamp() + "  |  " + t.getType() + "  |  ₹" +
+            t.getAmount() + "  |  " + t.getDescription()
+        ));
+    }
+
+    pdf.close();
+}
+
+
 }

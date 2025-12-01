@@ -100,6 +100,10 @@ async function showHistory() {
 
     }
 
+    function downloadMiniStatement() {
+  const id = document.getElementById("miniStmtId").value;
+  window.open(`${BASE_URL}/${id}/mini-statement`, "_blank");
+}
 }
 
 
