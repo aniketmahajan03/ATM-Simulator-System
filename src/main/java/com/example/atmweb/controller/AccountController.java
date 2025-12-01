@@ -1,5 +1,6 @@
 package com.example.atmweb.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,37 +45,42 @@ public class AccountController {
         return ResponseEntity.ok(created);
     }
 
-    // ✅ CHECK BALANCE (BY ACCOUNT NUMBER)
-    @GetMapping("/balance/{accountNumber}")
-    public ResponseEntity<String> checkBalance(@PathVariable String accountNumber) {
-        return ResponseEntity.ok(
-                "💰 Current Balance: ₹" + service.checkBalance(accountNumber)
-        );
-    }
+    // ✅ CHECK BALANCE (RETURN ONLY NUMBER)
+@GetMapping("/balance/{accountNumber}")
+public ResponseEntity<BigDecimal> checkBalance(
+        @PathVariable String accountNumber) {
 
-    // ✅ DEPOSIT (BY ACCOUNT NUMBER)
-    @PostMapping("/{accountNumber}/deposit")
-    public ResponseEntity<String> deposit(
-            @PathVariable String accountNumber,
-            @RequestBody MoneyRequest req) {
+    return ResponseEntity.ok(
+            service.checkBalance(accountNumber)
+    );
+}
 
-        return ResponseEntity.ok(
-                "✅ New Balance: ₹" +
-                        service.deposit(accountNumber, req.getAmount())
-        );
-    }
 
-    // ✅ WITHDRAW (BY ACCOUNT NUMBER)
-    @PostMapping("/{accountNumber}/withdraw")
-    public ResponseEntity<String> withdraw(
-            @PathVariable String accountNumber,
-            @RequestBody MoneyRequest req) {
+   // ✅ DEPOSIT (RETURN ONLY NUMBER)
+@PostMapping("/{accountNumber}/deposit")
+public ResponseEntity<BigDecimal> deposit(
+        @PathVariable String accountNumber,
+        @RequestBody MoneyRequest req) {
 
-        return ResponseEntity.ok(
-                "✅ New Balance: ₹" +
-                        service.withdraw(accountNumber, req.getAmount())
-        );
-    }
+    BigDecimal newBalance =
+            service.deposit(accountNumber, req.getAmount());
+
+    return ResponseEntity.ok(newBalance);
+}
+
+
+    // ✅ WITHDRAW (RETURN ONLY NUMBER)
+@PostMapping("/{accountNumber}/withdraw")
+public ResponseEntity<BigDecimal> withdraw(
+        @PathVariable String accountNumber,
+        @RequestBody MoneyRequest req) {
+
+    BigDecimal newBalance =
+            service.withdraw(accountNumber, req.getAmount());
+
+    return ResponseEntity.ok(newBalance);
+}
+
 
     // ✅ MINI STATEMENT (PDF DOWNLOAD)
     @GetMapping("/{accountNumber}/mini-statement")
