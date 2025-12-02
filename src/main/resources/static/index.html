@@ -11,9 +11,9 @@
 
     <div class="section">
       <h2>Create Account</h2>
-      <input id="holderName" placeholder="Holder Name">
-      <input id="accountNumber" placeholder="Account Number">
-      <input id="initialBalance" type="number" placeholder="Initial Balance">
+      <input id="holderName" placeholder="Enter Your Full Name">
+      <input id="accountNumber" placeholder="Enter Unique Account Number">
+      <input id="initialBalance" type="number" placeholder="Set Initial Balance">
       <button onclick="createAccount()">Create</button>
     </div>
 
@@ -27,14 +27,14 @@
 
     <div class="section">
       <h2>Check Balance</h2>
-      <input id="checkAccountNumber" placeholder="Account Number">
+      <input id="checkAccountNumber" placeholder="Enter Account Number">
       <button onclick="checkBalance()">Check</button>
       <p id="balanceResult"></p>
     </div>
 <h2>Transaction History</h2>
 <input type="number" id="historyAccountId" placeholder="Enter Account Number">
 <button onclick="showHistory()">Show History</button>
-<input type="number" id="miniStmtId" placeholder="Account ID">
+<input type="number" id="miniStmtId" placeholder="Enter Account Number">
 <button onclick="downloadMiniStatement()">Download Mini Statement</button>
 
 <table border="1" id="historyTable">
@@ -49,8 +49,6 @@
   </thead>
   <tbody></tbody>
 </table>
-
-  </div>
 
   <script src="script.js" type="text/javascript"></script>
 

@@ -1,9 +1,8 @@
 // For testing Locally
 // const BASE_URL = "http://localhost:8080/api/accounts";
 
-// Base URL
+// Base URL  
 const BASE_URL = "https://atm-simulator-system.onrender.com/api/accounts";
-
 // ✅ CREATE ACCOUNT
 async function createAccount() {
   const holderName = document.getElementById("holderName").value;
@@ -21,7 +20,6 @@ async function createAccount() {
     alert(`✅ Account created successfully! ID: ${data.id}, Account Number: ${data.accountNumber}`);
   } catch (error) {
     console.error("❌ Error creating account:", error);
-    alert("Failed to create account. Check console.");
   }
 }
 
@@ -41,7 +39,6 @@ async function deposit() {
     alert(`💰 ${data.message}\nNew Balance: ₹${data.balance}`);
   } catch (error) {
     console.error("❌ Deposit error:", error);
-    alert("Deposit failed. Check console.");
   }
 }
 
@@ -61,7 +58,6 @@ async function withdraw() {
     alert(`💸 ${data.message}\nNew Balance: ₹${data.balance}`);
   } catch (error) {
     console.error("❌ Withdraw error:", error);
-    alert("Withdraw failed. Check console.");
   }
 }
 
@@ -75,11 +71,62 @@ async function checkBalance() {
     document.getElementById("balanceResult").innerText = data;
   } catch (error) {
     console.error("❌ Check balance error:", error);
-    document.getElementById("balanceResult").innerText = "Error fetching balance";
   }
 }
 
-// ✅ TRANSACTION HISTORY
+
+// ✅ MINI STATEMENT (WORKING)
+async function showMiniStatement() {
+  const accountNumber = document.getElementById("miniAccountNumber").value;
+
+  if (!accountNumber) {
+    alert("Please enter account number");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/${accountNumber}/mini`);
+    const transactions = await res.json();
+
+    const tableBody = document.querySelector("#miniTable tbody");
+    tableBody.innerHTML = "";
+
+    if (!transactions.length) {
+      tableBody.innerHTML = "<tr><td colspan='5'>No transactions found</td></tr>";
+      return;
+    }
+
+    transactions.forEach(txn => {
+      const row = `
+        <tr>
+          <td>${txn.id}</td>
+          <td>${txn.type}</td>
+          <td>₹${txn.amount}</td>
+          <td>${txn.timestamp}</td>
+          <td>${txn.description}</td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+
+  } catch (error) {
+    console.error("❌ Mini statement error:", error);
+  }
+}
+
+// ✅ DOWNLOAD MINI STATEMENT (WORKING)
+function downloadMiniStatement() {
+  const accountId = document.getElementById("miniStmtId").value;
+
+  if (!accountId) {
+    alert("Enter account ID");
+    return;
+  }
+
+ 
+  window.open(`${BASE_URL}/${accountId}/mini/download`, "_blank");
+}
+  // ✅ FULL TRANSACTION HISTORY
 async function showHistory() {
   const accountNumber = document.getElementById("historyAccountId").value;
 
@@ -90,6 +137,12 @@ async function showHistory() {
 
   try {
     const res = await fetch(`${BASE_URL}/${accountNumber}/transactions`);
+
+    if (!res.ok) {
+      alert("Failed to fetch transaction history");
+      return;
+    }
+
     const transactions = await res.json();
 
     const tableBody = document.querySelector("#historyTable tbody");
@@ -112,7 +165,10 @@ async function showHistory() {
       `;
       tableBody.innerHTML += row;
     });
-  } catch (error) {
 
-}
+  } catch (error) {
+    console.error("History error:", error);
+    alert("Error loading transaction history");
+  }
+
 }

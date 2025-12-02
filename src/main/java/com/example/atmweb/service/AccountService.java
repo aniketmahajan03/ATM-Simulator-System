@@ -87,15 +87,18 @@ public class AccountService {
         return getAccountByAccountNumber(accountNumber).getBalance();
     }
 
-    // ✅ MINI STATEMENT (LAST 10 TRANSACTIONS)
-    public List<Transaction> getMiniStatement(String accountNumber) {
-        Account account = getAccountByAccountNumber(accountNumber);
-        return transactionRepository.findTop5ByAccountOrderByTimestampDesc(account);
-    }
+    // ✅ MINI STATEMENT (LAST 5 TRANSACTIONS)
+   public List<Transaction> getMiniStatement(String accountNumber) {
+    Account account = accountRepository.findByAccountNumber(accountNumber)
+            .orElseThrow(() -> new RuntimeException("Account not found"));
+
+    return transactionRepository.findTop5ByAccountOrderByTimestampDesc(account);
+}
 
     // ✅ FULL TRANSACTION HISTORY (OPTIONAL)
     public List<Transaction> getHistory(String accountNumber) {
         Account account = getAccountByAccountNumber(accountNumber);
         return transactionRepository.findByAccount(account);
     }
+
 }

@@ -6,16 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.atmweb.dto.CreateAccountRequest; // if you use HashMap
+import com.example.atmweb.dto.CreateAccountRequest;
 import com.example.atmweb.dto.MoneyRequest;
 import com.example.atmweb.model.Account;
 import com.example.atmweb.model.Transaction;
@@ -30,13 +25,10 @@ import jakarta.servlet.http.HttpServletResponse;
 @CrossOrigin(origins = "*")
 public class AccountController {
 
-    private final AccountService service;
+    @Autowired
+    private AccountService service;
 
-    public AccountController(AccountService service) {
-        this.service = service;
-    }
-
-    // ✅ CREATE ACCOUNT
+    // CREATE ACCOUNT
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody CreateAccountRequest req) {
         Account created = service.createAccount(
@@ -47,55 +39,55 @@ public class AccountController {
         return ResponseEntity.ok(created);
     }
 
-    // ✅ CHECK BALANCE (RETURN ONLY NUMBER)
-@GetMapping("/balance/{accountNumber}")
-public ResponseEntity<BigDecimal> checkBalance(
-        @PathVariable String accountNumber) {
+    // CHECK BALANCE
+    @GetMapping("/balance/{accountNumber}")
+    public ResponseEntity<BigDecimal> checkBalance(@PathVariable String accountNumber) {
+        return ResponseEntity.ok(service.checkBalance(accountNumber));
+    }
 
-    return ResponseEntity.ok(
-            service.checkBalance(accountNumber)
-    );
-}
+    // DEPOSIT
+    @PostMapping("/{accountNumber}/deposit")
+    public ResponseEntity<Map<String, Object>> deposit(
+            @PathVariable String accountNumber,
+            @RequestBody MoneyRequest req) {
 
+        BigDecimal newBalance = service.deposit(accountNumber, req.getAmount());
 
-@PostMapping("/{accountNumber}/deposit")
-public ResponseEntity<Map<String, Object>> deposit(
-        @PathVariable String accountNumber,
-        @RequestBody MoneyRequest req) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("balance", newBalance);
+        response.put("message", "Deposit successful");
 
-    BigDecimal newBalance = service.deposit(accountNumber, req.getAmount());
+        return ResponseEntity.ok(response);
+    }
 
-    Map<String, Object> response = new HashMap<>();
-    response.put("balance", newBalance);
-    response.put("message", "✅ Deposit successful");
+    // WITHDRAW
+    @PostMapping("/{accountNumber}/withdraw")
+    public ResponseEntity<Map<String, Object>> withdraw(
+            @PathVariable String accountNumber,
+            @RequestBody MoneyRequest req) {
 
-    return ResponseEntity.ok(response);
-}
+        BigDecimal newBalance = service.withdraw(accountNumber, req.getAmount());
 
-@PostMapping("/{accountNumber}/withdraw")
-public ResponseEntity<Map<String, Object>> withdraw(
-        @PathVariable String accountNumber,
-        @RequestBody MoneyRequest req) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("balance", newBalance);
+        response.put("message", "Withdraw successful");
 
-    BigDecimal newBalance = service.withdraw(accountNumber, req.getAmount());
+        return ResponseEntity.ok(response);
+    }
 
-    Map<String, Object> response = new HashMap<>();
-    response.put("balance", newBalance);
-    response.put("message", "✅ Withdraw successful");
+    // SHOW MINI STATEMENT (JSON)
+    @GetMapping("/{accountNumber}/mini")
+    public List<Transaction> getMiniStatement(@PathVariable String accountNumber) {
+        return service.getMiniStatement(accountNumber);
+    }
 
-    return ResponseEntity.ok(response);
-}
-
-
-
-    // ✅ MINI STATEMENT (PDF DOWNLOAD)
-    @GetMapping("/{accountNumber}/mini-statement")
-    public void downloadMiniStatement(
+    // DOWNLOAD MINI STATEMENT (PDF)
+    @GetMapping("/{accountNumber}/mini/download")
+    public void downloadMini(
             @PathVariable String accountNumber,
             HttpServletResponse response) throws Exception {
 
-        List<Transaction> transactions =
-                service.getMiniStatement(accountNumber);
+        List<Transaction> transactions = service.getMiniStatement(accountNumber);
 
         response.setContentType("application/pdf");
         response.setHeader(
@@ -103,28 +95,23 @@ public ResponseEntity<Map<String, Object>> withdraw(
                 "attachment; filename=mini-statement.pdf"
         );
 
-        com.itextpdf.text.Document pdf =
-                new com.itextpdf.text.Document();
-
-        PdfWriter.getInstance(pdf,
-                response.getOutputStream());
+        com.itextpdf.text.Document pdf = new com.itextpdf.text.Document();
+        PdfWriter.getInstance(pdf, response.getOutputStream());
 
         pdf.open();
-
         pdf.add(new Paragraph("ATM Mini Statement"));
         pdf.add(new Paragraph("Account Number: " + accountNumber));
         pdf.add(new Paragraph("Generated On: " + LocalDateTime.now()));
-        pdf.add(new Paragraph("--------------------------------------------------"));
+        pdf.add(new Paragraph("--------------------------------------"));
 
         for (Transaction t : transactions) {
             pdf.add(new Paragraph(
                     t.getTimestamp() + " | " +
-                            t.getType() + " | ₹" +
-                            t.getAmount() + " | " +
-                            t.getDescription()
+                    t.getType() + " | ₹" +
+                    t.getAmount() + " | " +
+                    t.getDescription()
             ));
         }
-
         pdf.close();
     }
 }
