@@ -2,7 +2,7 @@
 // const BASE = "/api/accounts";
 
 // Global URL 
-const BASE_URL = "https://atm-simulator-system.onrender.com/api/accounts";
+const BASE = "https://atm-simulator-system.onrender.com/api/accounts";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("historyForm");
