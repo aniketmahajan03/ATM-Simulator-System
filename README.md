@@ -40,18 +40,6 @@ atm-simulator-system/
   ├─ frontend/
   ├─ sql/
   └─ README.md
-▶️ How to Run
 
-Clone repository
-
-Import backend into IntelliJ/STS & configure MySQL credentials
-
-Run Spring Boot application
-
-Open frontend HTML in browser
-
-Use API base URL in JS
-
-🔗 Live Demo (Frontend)
-
+Live Demo -
 https://atm-simulator-system.onrender.com
