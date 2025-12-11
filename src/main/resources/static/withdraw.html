@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Withdraw</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="card">
+    <header class="card-header">
+      <h2>Withdraw Money</h2>
+    </header>
+
+    <form id="withdrawForm" class="form">
+      <input id="withdrawCard" placeholder="Card number" />
+      <input id="withdrawAmount" type="number" placeholder="Amount (₹)" min="1" />
+
+      <div class="row">
+        <button type="submit" class="btn danger">Withdraw</button>
+        <a class="btn ghost" href="/operations.html">Back</a>
+      </div>
+
+      <div id="withdrawOutput" class="output"></div>
+    </form>
+  </main>
+
+  <script src="/withdraw.js"></script>
+</body>
+</html>

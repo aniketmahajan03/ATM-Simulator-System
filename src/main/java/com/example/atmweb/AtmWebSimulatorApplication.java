@@ -15,6 +15,6 @@ public class AtmWebSimulatorApplication {
 
 // Edit Configuration before running project Locally or on Official site
 // Things to change
-// 1 - Script.js base url
+// 1 - JS base url's
 // 2 - application.properties
 // Boom Ready to Goo..

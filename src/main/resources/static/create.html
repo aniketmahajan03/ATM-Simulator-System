@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Create Account</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="card">
+    <header class="card-header">
+      <h2>Create Account</h2>
+    </header>
+
+    <form id="createForm" class="form">
+      <input id="holderName" placeholder="Full name" autocomplete="name" />
+      <input id="cardNumber" placeholder="Unique card number" />
+      <input id="initialBalance" type="number" placeholder="Initial balance (₹)" />
+
+      <div class="row">
+        <button type="submit" class="btn">Create</button>
+        <a class="btn ghost" href="/index.html">Back</a>
+      </div>
+
+      <div id="createOutput" class="output"></div>
+    </form>
+  </main>
+
+  <script src="/create.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Transaction History</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="card wide">
+    <header class="card-header">
+      <h2>Mini Statement</h2>
+    </header>
+
+    <form id="historyForm" class="form">
+      <input id="historyCard" placeholder="Card number" />
+      <div class="row">
+        <button type="submit" class="btn">View</button>
+        <button id="downloadBtn" type="button" class="btn secondary">Download PDF</button>
+        <a class="btn ghost" href="/index.html">Home</a>
+      </div>
+
+      <div id="historyOutput" class="output"></div>
+
+      <table id="historyTable" class="table" style="display:none;">
+        <thead>
+          <tr><th>ID</th><th>Type</th><th>Amount</th><th>Date</th><th>Description</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </form>
+  </main>
+
+  <script src="/history.js"></script>
+</body>
+</html> 

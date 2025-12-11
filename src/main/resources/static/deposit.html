@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Deposit</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="card">
+    <header class="card-header">
+      <h2>Deposit Money</h2>
+    </header>
+
+    <form id="depositForm" class="form">
+      <input id="depositCard" placeholder="Card number" />
+      <input id="depositAmount" type="number" placeholder="Amount (₹)" min="1" />
+
+      <div class="row">
+        <button type="submit" class="btn">Deposit</button>
+        <a class="btn ghost" href="/operations.html">Back</a>
+      </div>
+
+      <div id="depositOutput" class="output"></div>
+    </form>
+  </main>
+
+  <script src="/deposit.js"></script>
+</body>
+</html>
